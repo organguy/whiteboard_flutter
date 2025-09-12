@@ -302,7 +302,7 @@ class WhiteDisplayer {
     dsBridge.callHandler("displayer.convertToPointInWorld", [x, y], ([value]) {
 
       dynamic decoded = jsonDecode(value);
-      print("convertToPointInWorld : $decoded");
+      print("convertToPointInWorld 플러그인 : $decoded");
       completer.complete(WhiteBoardPoint.fromJson(decoded));
     });
     return completer.future;
