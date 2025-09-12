@@ -301,9 +301,17 @@ class WhiteDisplayer {
     var completer = Completer<WhiteBoardPoint>();
     dsBridge.callHandler("displayer.convertToPointInWorld", [x, y], ([value]) {
       print("convertToPointInWorld value : $value");
-      dynamic decoded = jsonDecode(value);
-      print("convertToPointInWorld decoded : $decoded");
-      completer.complete(WhiteBoardPoint.fromJson(decoded));
+      try {
+        // value 가 이미 {x:..., y:...} 형태의 Map 으로 들어온다고 가정
+        // (간혹 [Map]으로 오는 브리지도 있어 1줄 방어만 추가)
+        if (value is List && value.isNotEmpty) value = value.first;
+
+        final map = Map<String, dynamic>.from(value as Map);
+        completer.complete(WhiteBoardPoint.fromJson(map));
+      } catch (e, st) {
+        // 문제가 생기면 에러로 넘김
+        completer.completeError(e, st);
+      }
     });
     return completer.future;
   }
