@@ -618,6 +618,25 @@ class WhiteRoom extends WhiteDisplayer {
         ..addAll(state.toJson())
         ..addAll(data));
       onRoomStateChanged?.call(state);
+
+      // ★ 텍스트로 바뀌었다면 곧바로 웹 측 포커스를 강제
+      final member = (data['memberState'] ?? {}) as Map<String, dynamic>;
+      if (member['currentApplianceName'] == 'text') {
+        dsBridge.evaluateJavascript('''
+        try {
+          // SDK 내부에서 텍스트 입력 노드/커서를 준비했다는 가정 하에
+          // window.focus()와 activeElement 보정
+          window.focus();
+          if (document.activeElement && document.activeElement.focus) {
+            document.activeElement.focus();
+          }
+          // 필요시 SDK에 제공되는 focus 진입 함수가 있다면 그것도 호출
+          if (window.whiteboard && window.whiteboard.focusText) {
+            window.whiteboard.focusText();
+          }
+        } catch(e) { console.log('focus error', e); }
+      ''');
+      }
     } catch (e) {
       print("fireRoomStateChanged error $e");
     }
