@@ -300,7 +300,10 @@ class WhiteDisplayer {
   Future<WhiteBoardPoint> convertToPointInWorld(num x, num y) {
     var completer = Completer<WhiteBoardPoint>();
     dsBridge.callHandler("displayer.convertToPointInWorld", [x, y], ([value]) {
-      completer.complete(WhiteBoardPoint.fromJson(jsonDecode(value)));
+
+      dynamic decoded = jsonDecode(value);
+      print("convertToPointInWorld : $decoded");
+      completer.complete(WhiteBoardPoint.fromJson(decoded));
     });
     return completer.future;
   }
