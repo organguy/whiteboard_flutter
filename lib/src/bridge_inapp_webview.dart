@@ -38,18 +38,17 @@ class DsBridgeInAppWebViewState extends State<DsBridgeInAppWebView> {
   Widget build(BuildContext context) {
     return Builder(builder: (_) {
       return InAppWebView(
+        initialSettings: InAppWebViewSettings(
+          javaScriptEnabled: true,
+          mediaPlaybackRequiresUserGesture: false,
+          allowsInlineMediaPlayback: true,
+          transparentBackground: true,
+          userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 DsBridge/1.0.0",
+          useHybridComposition: true,
+        ),
         initialUrlRequest: URLRequest(url: WebUri.uri(Uri.parse("about:blank"))),
         onWebViewCreated: (InAppWebViewController controller) async {
           _controller = controller;
-          _controller.setSettings(
-            settings: InAppWebViewSettings(
-              mediaPlaybackRequiresUserGesture: false,
-              javaScriptEnabled: true,
-              userAgent:
-                  "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 DsBridge/1.0.0",
-              allowsInlineMediaPlayback: true,
-            ),
-          );
           controller.loadFile(
               assetFilePath:
                   "packages/whiteboard_sdk_flutter/assets/whiteboardBridge/index.html");
